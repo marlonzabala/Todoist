@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Todoist random task</title>
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+</head>
+
+<body>
+  <script>
+  	const urlParams = new URLSearchParams(window.location.search);
+	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
+
+  	fetch('https://api.todoist.com/rest/v1/tasks', {
+	    headers: new Headers({
+	        'Authorization': myParam
+	    })
+	}).then(response => response.json()).then(data => {
+	    item = data[Math.floor(Math.random() * data.length)];
+	    window.location.href = item.url
+	})
+  </script>
+  <h1>Loading Random Task...</h1>
+</body>
+</html>
