@@ -18,8 +18,8 @@
 	    })
 	}).then(response => response.json()).then(data => {
 	    item = data[Math.floor(Math.random() * data.length)];
-	    // window.location.href = item.url
-            window.location.replace(item.url);
+	    window.location = item.url
+            // window.location.replace(item.url);
 	})
   </script>
   <h1>Loading Random Task...</h1>
