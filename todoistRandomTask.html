@@ -20,7 +20,8 @@
 	    item = data[Math.floor(Math.random() * data.length)];
 	    // window.location = item.url
             // window.location.replace(item.url);
-	    window.open(item.url,"_self");
+	    // window.open(item.url,"_self");
+	    window.open("javascript: fetch('https://api.todoist.com/rest/v1/tasks', {   headers: new Headers({     'Authorization': 'Bearer 01223c58edbc188f9b24be32af188342440f0330'   }) }) .then(response => response.json()) .then(data => {   item = data[Math.floor(Math.random()*data.length)];   window.location.href = item.url })","_self");
 	})
   </script>
   <h1>Loading Random Task...</h1>
