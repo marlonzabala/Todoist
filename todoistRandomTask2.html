@@ -1,5 +1,5 @@
-<!doctype html>
 
+  
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -73,6 +73,7 @@ function heheRun() {
 
 		    document.getElementById("p2").innerHTML += "<br> - " + linkify(item.content) + " " + "<a href='" + item.url +"' target='_blank'>Edit</a>";
 		    document.getElementById("p2").innerHTML += " " + "<button onclick='closeTask(" + item.id +")'>Complete</button>";
+		    document.getElementById("p2").innerHTML += " " + "<button onclick='rescheduleToday(" + item.id +")'>Reschedule Today</button>";
 
 			if(item.due) {
 			    if(item.due.recurring) {
@@ -102,6 +103,29 @@ function closeTask(taskId) {
   		document.getElementById("p2").innerHTML += "<br><br> - complete!";
   	});
 }
+
+function rescheduleToday(taskId) {
+
+  	const urlParams = new URLSearchParams(window.location.search);
+	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
+
+	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId+'/close';
+	//document.getElementById("p2").innerHTML += "<br> - " + sssss +  myParam;
+
+	fetch(sssss, {
+					method: 'POST',
+				    headers: new Headers({
+				        'Authorization': myParam
+				    }),
+				    body: JSON.stringify({due_string: 'today'})
+				}
+		)
+	.then(res=>res)
+  	.then(res => {
+  		document.getElementById("p2").innerHTML += "<br><br> - complete!";
+  	});
+}
+
 
 
 heheRun();
