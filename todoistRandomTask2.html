@@ -1,5 +1,3 @@
-
-  
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -33,6 +31,8 @@ function heheRun() {
   	const urlParams = new URLSearchParams(window.location.search);
 	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
 	const userId = urlParams.get('userId');
+
+	document.getElementById("p2").innerHTML += "<br><br> refreshing..";
 
   	fetch('https://api.todoist.com/rest/v1/tasks', {
 	    headers: new Headers({
@@ -123,7 +123,7 @@ function rescheduleToday(taskId) {
 		)
 	.then(res=>res)
   	.then(res => {
-  		document.getElementById("p2").innerHTML += "<br><br> - complete!";
+  		document.getElementById("p2").innerHTML += "<br><br> - reschedule Today!";
   	});
 }
 
