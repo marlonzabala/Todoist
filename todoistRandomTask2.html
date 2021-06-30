@@ -32,7 +32,12 @@ function heheRun() {
 	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
 	const userId = urlParams.get('userId');
 
-	document.getElementById("p2").innerHTML += "<br><br> refreshing..";
+	try {
+	  	document.getElementById("p2").innerHTML += "<br><br> refreshing..";
+	} catch (e) {
+	    //  Block of code to handle errors
+	  	const test = "test";
+	}
 
   	fetch('https://api.todoist.com/rest/v1/tasks', {
 	    headers: new Headers({
@@ -126,7 +131,6 @@ function rescheduleToday(taskId) {
   		document.getElementById("p2").innerHTML += "<br><br> - reschedule Today!";
   	});
 }
-
 
 
 heheRun();
