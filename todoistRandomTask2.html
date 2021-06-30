@@ -109,13 +109,14 @@ function rescheduleToday(taskId) {
   	const urlParams = new URLSearchParams(window.location.search);
 	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
 
-	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId+'/close';
+	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId;
 	//document.getElementById("p2").innerHTML += "<br> - " + sssss +  myParam;
 
 	fetch(sssss, {
 					method: 'POST',
 				    headers: new Headers({
-				        'Authorization': myParam
+				        'Authorization': myParam,
+				        'Content-Type': "application/json"
 				    }),
 				    body: JSON.stringify({due_string: 'today'})
 				}
