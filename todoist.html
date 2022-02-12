@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title></title>
+<meta charset="utf-8"/>
+<meta content="width=device-width" name="viewport"/>
+<style>
+		body {
+			/*background-color: #2b4c6f;*/
+			background-color: #1f1f1f;
+			/* background-image: url('https://source.unsplash.com/random/1920x1080/?mountains');
+			background-repeat: no-repeat;
+			  background-attachment: fixed;
+			  background-size: cover; */
+			color: #000;
+			font-family: Ubuntu, Tahoma, Verdana, Segoe, sans-serif
+		}
+
+		.pointer-link {
+            cursor: pointer;
+        }
+
+        .list {
+		    opacity: 1;
+		    -webkit-transition: opacity 1000ms linear;
+		    transition: opacity 1000ms linear;
+		}
+
+		.changebg:hover{
+		  background-color: #2596be !important;
+		}
+
+		a {
+			color: #f6a13a
+		}
+
+		* {
+			box-sizing: border-box
+		}
+
+		body,
+		p {
+			margin: 0
+		}
+
+		.bee-row-content {
+			max-width: 775px;
+			margin: 0 auto;
+			display: flex
+		}
+
+		.bee-row-content .bee-col-w1 {
+			flex-basis: 8%
+		}
+
+		.bee-row-content .bee-col-w2 {
+			flex-basis: 17%
+		}
+
+		.bee-row-content .bee-col-w9 {
+			flex-basis: 75%
+		}
+
+		.bee-row-content .bee-col-w12 {
+			flex-basis: 100%
+		}
+
+		.bee-button .content,
+		.bee-html-block {
+			text-align: center
+		}
+
+		.bee-button a,
+		.bee-icon .bee-icon-label-right a {
+			text-decoration: none
+		}
+
+		.bee-icon,
+		.bee-icon .bee-icon-image,
+		.bee-icon .bee-icon-label-right {
+			display: inline-block
+		}
+
+		.bee-icon {
+			vertical-align: middle
+		}
+
+		.bee-icon .bee-icon-image {
+			vertical-align: middle;
+			margin-right: -4px
+		}
+
+		.bee-text {
+			overflow-wrap: anywhere
+		}
+
+		@media (max-width:768px) {
+			.bee-row-content:not(.no_stack) {
+				display: block
+			}
+		}
+
+		.bee-row-1,
+		.bee-row-2,
+		.bee-row-3,
+		.bee-row-4,
+		.bee-row-5,
+		.bee-row-6,
+		.bee-row-7,
+		.bee-row-8 {
+			background-repeat: no-repeat
+		}
+
+		.bee-row-1 .bee-row-content,
+		.bee-row-2 .bee-row-content,
+		.bee-row-8 .bee-row-content {
+			background-repeat: no-repeat;
+			color: #000
+		}
+
+		.bee-row-1 .bee-col-1,
+		.bee-row-2 .bee-col-1,
+		.bee-row-3 .bee-col-1,
+		.bee-row-3 .bee-col-2,
+		.bee-row-4 .bee-col-1,
+		.bee-row-4 .bee-col-2,
+		.bee-row-5 .bee-col-1,
+		.bee-row-5 .bee-col-2,
+		.bee-row-6 .bee-col-1,
+		.bee-row-7 .bee-col-1,
+		.bee-row-8 .bee-col-1 {
+			padding-bottom: 5px;
+			padding-top: 5px
+		}
+
+		.bee-row-1 .bee-col-1 .bee-block-1,
+		.bee-row-2 .bee-col-1 .bee-block-1,
+		.bee-row-3 .bee-col-2 .bee-block-1,
+		.bee-row-4 .bee-col-2 .bee-block-1,
+		.bee-row-5 .bee-col-2 .bee-block-1,
+		.bee-row-6 .bee-col-1 .bee-block-2 {
+			padding: 10px
+		}
+
+		.bee-row-3 .bee-row-content,
+		.bee-row-4 .bee-row-content,
+		.bee-row-5 .bee-row-content,
+		.bee-row-6 .bee-row-content,
+		.bee-row-7 .bee-row-content {
+			color: #000;
+			background-repeat: no-repeat
+		}
+
+		.bee-row-3 .bee-col-1 .bee-block-1,
+		.bee-row-3 .bee-col-3 .bee-block-1,
+		.bee-row-4 .bee-col-1 .bee-block-1,
+		.bee-row-4 .bee-col-3 .bee-block-1,
+		.bee-row-5 .bee-col-1 .bee-block-1,
+		.bee-row-5 .bee-col-3 .bee-block-1,
+		.bee-row-7 .bee-col-1 .bee-block-1 {
+			text-align: center;
+			padding: 10px
+		}
+
+		.bee-row-3 .bee-col-3,
+		.bee-row-4 .bee-col-3,
+		.bee-row-5 .bee-col-3,
+		.bee-row-8 .bee-col-1 .bee-block-1 {
+			padding-bottom: 5px;
+			padding-top: 5px
+		}
+
+		.bee-row-8 .bee-col-1 .bee-block-1 {
+			color: #9d9d9d;
+			font-family: inherit;
+			font-size: 15px;
+			text-align: center
+		}
+
+		.bee-row-8 .bee-col-1 .bee-block-1 .bee-icon-image {
+			padding: 5px 6px 5px 5px
+		}
+
+		.bee-row-8 .bee-col-1 .bee-block-1 .bee-icon {
+			margin-left: 0;
+			margin-right: 0
+		}
+	</style>
+</head>
+<body>
+<div class="bee-page-container">
+<div class="bee-row bee-row-1">
+<div class="bee-row-content">
+<div class="bee-col bee-col-1 bee-col-w12">
+<div class="bee-block bee-block-1 bee-text">
+<div class="bee-text-content" style="font-size: 14px; line-height: 120%; color: #ffffff; font-family: inherit;">
+<p style="font-size: 14px; line-height: 16px; text-align: center;"><span style="font-size: 64px; line-height: 76px;">Hello Marlon</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bee-row bee-row-2">
+<div class="bee-row-content">
+<div class="bee-col bee-col-1 bee-col-w12">
+<div class="bee-block bee-block-1 bee-text">
+<div class="bee-text-content" style="font-size: 14px; line-height: 120%; color: #ffffff; font-family: inherit;">
+<p style="font-size: 14px; line-height: 16px; text-align: center;">Here are some tasks: </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="bee-row bee-row-6">
+<div class="bee-row-content">
+<div class="bee-col bee-col-1 bee-col-w12">
+<div class="bee-block bee-block-2 bee-text">
+<div class="bee-text-content" style="font-size: 14px; line-height: 120%; color: #ffffff; font-family: inherit;">
+<p style="font-size: 14px; line-height: 16px; text-align: center;" id="p2"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="additional-blocks">
+</div>
+<div class="bee-row bee-row-7">
+<div class="bee-row-content">
+<div class="bee-col bee-col-1 bee-col-w12">
+<div class="bee-block bee-block-1 bee-button"><a class="bee-button-content pointer-link changebg" style="font-size: 14px; line-height: 28px; font-family: inherit; background-color: #3AAEE0; border-radius: 4px; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; color: #ffffff; padding-top: 5px; padding-right: 20px; padding-bottom: 5px; padding-left: 20px; width: 55%; max-width: 100%; display: inline-block;" onclick="heheRun()"><span style="font-size: 16px; line-height: 200%; word-break: break-word;">REFRESH</span></a></div>
+</div>
+</div>
+</div>
+</div>
+</body>
+
+
+<script>
+
+  	// random images for wallpaper = https://source.unsplash.com/random/1920x1080/?mountains
+
+function linkify(inputText) {
+    var replacedText, replacePattern1, replacePattern2, replacePattern3;
+
+    //URLs starting with http://, https://, or ftp://
+    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+
+    //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+    //Change email addresses to mailto:: links.
+    replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+    replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+
+    return replacedText;
+}
+
+var shownItems = new Array();
+var dataResponse;
+
+function heheRun() {
+
+  	const urlParams = new URLSearchParams(window.location.search);
+	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
+	const userId = urlParams.get('userId');
+
+	try {
+	  	document.getElementById("p2").innerHTML += "<br><br> refreshing..";
+	  	document.getElementById("additional-blocks").innerHTML = "";
+	} catch (e) {
+	    //  Block of code to handle errors
+	  	const test = "test";
+	}
+
+	if(dataResponse != null) {
+		get5fromList(dataResponse);
+		return;
+	}
+
+  	fetch('https://api.todoist.com/rest/v1/tasks', {
+	    headers: new Headers({
+	        'Authorization': myParam
+	    })
+	}).then(response => response.json()).then(data => {
+		dataResponse = data;
+		get5fromList(data);
+	})
+}
+
+function get5fromList(dataResponse){
+		var data = dataResponse;
+
+	    item = data[Math.floor(Math.random() * data.length)];
+	    // window.location = item.url
+        // window.location.replace(item.url);
+	    // window.open(item.url,"_self");
+	    document.getElementById("p2").innerHTML = "";
+	    var counter = 0;
+	    for (let step = 0; step < 5; step++) {
+
+	    	console.log("counter: " + counter + " item: " + step);
+	    	counter++;
+
+			item = data[Math.floor(Math.random() * data.length)];
+
+			var id = shownItems.indexOf(item.id);
+
+			if(id != -1) {
+				// exists, skip item because it has been shown before
+				console.log("exists, skip item because it has been shown before");
+				step--;
+				continue;
+				// code to remove item = myArray.splice(id, 1);
+			} else {
+				//shownItems.push(item.id);
+			}
+
+		    if(item.due) {
+		    	//document.getElementById("p2").innerHTML += "<br>" + item.due.date
+
+				var dateToday = new Date();
+				dateTask = new Date(item.due.date);
+
+				var diff = dateToday - dateTask;
+				// console.log(dateToday);
+				// console.log(dateTask);
+				// console.log(dateToday - dateTask);
+				// console.log(86400000 * 5);
+
+				if(dateToday > dateTask && counter > 200) {
+
+			    	// add this item
+			    	shownItems.push(item.id);
+
+			    } else if(dateToday > dateTask && diff < (86400000 * 5)) {
+				    //document.getElementById("p2").innerHTML += " greater"
+				    console.log(dateToday);
+				    console.log(dateTask + " due date");
+				    console.log(item.due.date + " due date");
+				    console.log(item.due.string + " due date");
+				    console.log(item.due.datetime + " due date");
+				    console.log(dateToday - dateTask);
+				    console.log(86400000 * 5);
+				    console.log("added ---- " + item.content);
+				    shownItems.push(item.id);
+				} else {
+				    //document.getElementById("p2").innerHTML += " smaller"
+				    console.log("skip because task for future");
+				    step--;
+				    continue;
+				    // do not include because in the future pa
+				}
+		    } else if(counter > 500) {
+		    	// add this item
+		    	shownItems.push(item.id);
+		    } else {
+		    	console.log("skip does not have due date");
+				step--;
+				continue;
+		    }
+
+		    if(item.assignee) {
+				if(item.assignee != userId) {
+					console.log("skip not assigned to user");
+				    step--;
+				    continue;
+				    // do not include because not assigned to me
+				}
+		    }
+
+		    //document.getElementById("p2").innerHTML += "<br><br> - " + linkify(item.content) + " " + "<a href='" + item.url +"' target='_blank'>Edit</a>";
+		    //document.getElementById("p2").innerHTML += " " + "<button onclick='closeTask(" + item.id +")'>Complete</button>";
+		    //document.getElementById("p2").innerHTML += " " + "<button onclick='rescheduleToday(" + item.id +")'>Reschedule Today</button>";
+		    shownItems.push(item.id);
+
+			var editLink = "<br> <a href='" + item.url +"' target='_blank'>Edit</a>";
+			var todayLink = "";
+			var tomLink = "";
+			var nextWeekLink = "";
+		    var recurringIndicator = "";
+
+		    if(item.due) {
+			    if(item.due.recurring) {
+			    	recurringIndicator += " | <b>recurring " + item.due.string + "</b>";
+			    }
+
+			    if(item.due.string) {
+			    	todayLink = " | <a class='pointer-link' onclick='reschedule("+item.id+",\""+item.due.string+"\")'>Today</a>";
+			    	tomLink = " | <a class='pointer-link' onclick='reschedule("+item.id+",\""+item.due.string+" starting tom \")'>Tom</a>";
+			    	nextWeekLink = " | <a class='pointer-link' onclick='reschedule("+item.id+",\""+item.due.string+" starting next week \")'>Next week</a>";
+				}
+			}
+
+			document.getElementById("additional-blocks").innerHTML += '<div class="bee-row bee-row-5" id="'+item.id+'"><div class="bee-row-content"><div class="bee-col bee-col-1 bee-col-w1"><div class="bee-block bee-block-1 bee-button"><a class="bee-button-content pointer-link changebg"  onclick="closeTask('+item.id+')" style="font-size: 14px; line-height: 28px; font-family: inherit; background-color: #3AAEE0; border-radius: 4px; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; color: #ffffff; padding-top: 5px; padding-right: 15px; padding-bottom: 5px; padding-left: 15px; width: auto; max-width: 100%; display: inline-block;"><span style="font-size: 16px; line-height: 200%; word-break: break-word;">✓</span></a></div></div><div class="bee-col bee-col-2 bee-col-w9"><div class="bee-block bee-block-1 bee-text"><div class="bee-text-content" style="font-size: 14px; line-height: 120%; color: #ffffff; font-family: inherit;"><p style="font-size: 14px; line-height: 16px;" id="'+item.id+'content">'+ linkify(item.content) + editLink +  todayLink  + tomLink + nextWeekLink + recurringIndicator +'</p></div></div></div></div>';
+		}
+}
+
+function closeTask(taskId) {
+
+  	const urlParams = new URLSearchParams(window.location.search);
+	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
+	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId+'/close';
+
+	document.getElementById(taskId+'content').innerHTML += " ⭯";
+
+	fetch(sssss, {
+			method: 'POST',
+		    headers: new Headers({
+		        'Authorization': myParam
+		    })
+		})
+	.then(res=>res)
+  	.then(res => {
+  		//document.getElementById(taskId).innerHTML = "";
+  		var removeTarget = document.getElementById(taskId);
+  		removeTarget.style.opacity = '0';
+		setTimeout(function(){removeTarget.parentNode.removeChild(removeTarget);}, 100);
+  	});
+}
+
+function rescheduleToday(taskId) {
+
+  	const urlParams = new URLSearchParams(window.location.search);
+	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
+	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId;
+
+	fetch(sssss, {
+					method: 'POST',
+				    headers: new Headers({
+				        'Authorization': myParam,
+				        'Content-Type': "application/json"
+				    }),
+				    body: JSON.stringify({due_string: 'today'})
+				}
+		)
+	.then(res=>res)
+  	.then(res => {
+  		document.getElementById("p2").innerHTML += "<br><br> - reschedule Today!";
+  	});
+}
+
+
+function reschedule(taskId, dueString) {
+
+  	const urlParams = new URLSearchParams(window.location.search);
+	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
+	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId;
+	document.getElementById(taskId+'content').innerHTML += " ⭯";
+
+	fetch(sssss, {
+					method: 'POST',
+				    headers: new Headers({
+				        'Authorization': myParam,
+				        'Content-Type': "application/json"
+				    }),
+				    body: JSON.stringify({due_string: dueString})
+				}
+		)
+	.then(res=>res)
+  	.then(res => {
+  		//document.getElementById("p2").innerHTML += "<br><br> - reschedule Today!";
+  		var removeTarget = document.getElementById(taskId);
+  		removeTarget.style.opacity = '0';
+		setTimeout(function(){removeTarget.parentNode.removeChild(removeTarget);}, 200);
+
+  	});
+}
+
+
+heheRun();
+  </script>
+
+</html>
