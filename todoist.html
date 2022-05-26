@@ -206,7 +206,7 @@
 <div class="bee-col bee-col-1 bee-col-w12">
 <div class="bee-block bee-block-1 bee-text">
 <div class="bee-text-content" style="font-size: 14px; line-height: 120%; color: #ffffff; font-family: inherit;">
-<p style="font-size: 14px; line-height: 16px; text-align: center;">Here are some tasks: </p>
+<p style="font-size: 14px; line-height: 16px; text-align: center;"></p>
 </div>
 </div>
 </div>
@@ -229,7 +229,7 @@
 <div class="bee-row bee-row-7">
 <div class="bee-row-content">
 <div class="bee-col bee-col-1 bee-col-w12">
-<div class="bee-block bee-block-1 bee-button"><a class="bee-button-content pointer-link changebg" style="font-size: 14px; line-height: 28px; font-family: inherit; background-color: #3AAEE0; border-radius: 4px; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; color: #ffffff; padding-top: 5px; padding-right: 20px; padding-bottom: 5px; padding-left: 20px; width: 55%; max-width: 100%; display: inline-block;" onclick="heheRun()"><span style="font-size: 16px; line-height: 200%; word-break: break-word;">REFRESH</span></a></div>
+<div class="bee-block bee-block-1 bee-button"><a class="bee-button-content pointer-link changebg" style="font-size: 14px; line-height: 28px; font-family: inherit; background-color: #3AAEE0; border-radius: 4px; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; color: #ffffff; padding-top: 5px; padding-right: 20px; padding-bottom: 5px; padding-left: 20px; width: 55%; max-width: 100%; display: inline-block;" onclick="mainRun()"><span style="font-size: 16px; line-height: 200%; word-break: break-word;">REFRESH</span></a></div>
 </div>
 </div>
 </div>
@@ -239,34 +239,19 @@
 
 <script>
 
-  	// random images for wallpaper = https://source.unsplash.com/random/1920x1080/?mountains
-
-function linkify(inputText) {
-    var replacedText, replacePattern1, replacePattern2, replacePattern3;
-
-    //URLs starting with http://, https://, or ftp://
-    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
-
-    //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
-    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
-
-    //Change email addresses to mailto:: links.
-    replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
-    replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
-
-    return replacedText;
-}
+// random images for wallpaper = https://source.unsplash.com/random/1920x1080/?mountains
 
 var shownItems = new Array();
+var completedItems = new Array();
+var completedItemsCount = 0;
 var dataResponse;
+var myParam = "";
 
-function heheRun() {
+function mainRun() {
 
-  	const urlParams = new URLSearchParams(window.location.search);
-	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
-	const userId = urlParams.get('userId');
+  var urlParams = new URLSearchParams(window.location.search);
+	myParam = 'Bearer '.concat(urlParams.get('apiKey'));
+	var userId = urlParams.get('userId');
 
 	try {
 	  	document.getElementById("p2").innerHTML += "<br><br> refreshing..";
@@ -281,7 +266,9 @@ function heheRun() {
 		return;
 	}
 
-  	fetch('https://api.todoist.com/rest/v1/tasks', {
+	getTotalCompletedItems();
+
+  fetch('https://api.todoist.com/rest/v1/tasks', {
 	    headers: new Headers({
 	        'Authorization': myParam
 	    })
@@ -291,117 +278,135 @@ function heheRun() {
 	})
 }
 
-function get5fromList(dataResponse){
+function getTotalCompletedItems() {
+
+	const now = new Date();
+	const dateLocal = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+	const str = dateLocal.toISOString().slice(0, 10);
+	console.log(str);
+
+	// Get count of completed items
+	fetch('https://api.todoist.com/sync/v8/completed/get_all?limit=200&since='+str+'T16:00', {
+	    headers: new Headers({
+	        'Authorization': myParam
+	    })
+	}).then(response => response.json()).then(data => {
+		completedItemsCount = data.items.length;
+		console.log(data);
+	})
+}
+
+function get5fromList(dataResponse) {
 		var data = dataResponse;
 
 	    item = data[Math.floor(Math.random() * data.length)];
+
 	    // window.location = item.url
-        // window.location.replace(item.url);
+      // window.location.replace(item.url);
 	    // window.open(item.url,"_self");
+
+	    // clear the items list
 	    document.getElementById("p2").innerHTML = "";
+
+	    //count total loops
 	    var counter = 0;
+
+	    // show 5 items
 	    for (let step = 0; step < 5; step++) {
 
-	    	console.log("counter: " + counter + " item: " + step);
-	    	counter++;
+		    	//console.log("counter: " + counter + " item: " + step);
+		    	counter++;
 
-			item = data[Math.floor(Math.random() * data.length)];
+					item = data[Math.floor(Math.random() * data.length)];
 
-			var id = shownItems.indexOf(item.id);
+					var id = shownItems.indexOf(item.id);
 
-			if(id != -1) {
-				// exists, skip item because it has been shown before
-				console.log("exists, skip item because it has been shown before");
-				step--;
-				continue;
-				// code to remove item = myArray.splice(id, 1);
-			} else {
-				//shownItems.push(item.id);
+					if(id != -1) {
+						// Skip item because it has been shown before
+						//console.log("exists, skip item because it has been shown before");
+						step--;
+						continue;
+					}
+
+				  if(item.due) {
+							dateTask = new Date(item.due.date);
+							var dateToday = new Date();
+							var diff = dateToday - dateTask;
+
+							// add items if due date is lower than 5 days
+							if (dateToday > dateTask && diff < (86400000 * 5)) {
+									console.log(dateToday);
+							    console.log(dateTask + " due date");
+							    console.log(item.due.date + " due date");
+							    console.log(item.due.string + " due date");
+							    console.log(item.due.datetime + " due date");
+							    console.log(dateToday - dateTask);
+							    console.log(86400000 * 5);
+							    console.log("added ---- " + item.content);
+							    shownItems.push(item.id);
+						  } else if(dateToday > dateTask && counter > 200) {
+						    	// add this item if counter is getting greater than 200 - prevent long loop
+						    	shownItems.push(item.id);
+							} else {
+							    //console.log("skip because task for future");
+							    step--;
+							    continue;
+							    // do not include because scheduled in the future
+							}
+				    } else if(counter > 500) {
+				    	// add this item, to complete the 5 items
+				    	shownItems.push(item.id);
+				    } else {
+				    	console.log("skip does not have due date");
+							step--;
+							continue;
+				    }
+
+
+						// do not show items not assigend to me
+						urlParams = new URLSearchParams(window.location.search);
+						userId = urlParams.get('userId');
+				    if(item.assignee) {
+							if(item.assignee != userId) {
+								console.log("skip not assigned to user");
+							  step--;
+							  continue;
+							  // do not include because not assigned to me
+							}
+				    }				    
+
+				   //shownItems.push(item.id);
+
+					var editLink = "<br> <a href='" + item.url +"' target='_blank'>Edit</a>";
+					var todayLink = "";
+					var tomLink = "";
+					var nextWeekLink = "";
+				  var recurringIndicator = "";
+
+				    if(item.due) {
+					    if(item.due.recurring) {
+					    	recurringIndicator += " | <b>recurring " + item.due.string + "</b>";
+					    }
+
+					    if(item.due.string) {
+					    	todayLink = " | <a class='pointer-link' onclick='reschedule("+item.id+",\""+item.due.string+"\")'>Today</a>";
+					    	tomLink = " | <a class='pointer-link' onclick='reschedule("+item.id+",\""+item.due.string+" starting tom \")'>Tom</a>";
+					    	nextWeekLink = " | <a class='pointer-link' onclick='reschedule("+item.id+",\""+item.due.string+" starting next week \")'>Next week</a>";
+						}
+					}
+
+					document.getElementById("additional-blocks").innerHTML += '<div class="bee-row bee-row-5" id="'+item.id+'"><div class="bee-row-content"><div class="bee-col bee-col-1 bee-col-w1"><div class="bee-block bee-block-1 bee-button"><a class="bee-button-content pointer-link changebg" id="'+item.id+'button" onclick="closeTask('+item.id+')" style="font-size: 14px; line-height: 28px; font-family: inherit; background-color: #3AAEE0; border-radius: 4px; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; color: #ffffff; padding-top: 5px; padding-right: 15px; padding-bottom: 5px; padding-left: 15px; width: auto; max-width: 100%; display: inline-block;"><span style="font-size: 16px; line-height: 200%; word-break: break-word;">✓</span></a></div></div><div class="bee-col bee-col-2 bee-col-w9"><div class="bee-block bee-block-1 bee-text"><div class="bee-text-content" style="font-size: 14px; line-height: 120%; color: #ffffff; font-family: inherit;"><p style="font-size: 14px; line-height: 16px;" id="'+item.id+'content">'+ linkify(item.content) + editLink +  todayLink  + tomLink + nextWeekLink + recurringIndicator +'</p></div></div></div></div>';
 			}
 
-		    if(item.due) {
-		    	//document.getElementById("p2").innerHTML += "<br>" + item.due.date
-
-				var dateToday = new Date();
-				dateTask = new Date(item.due.date);
-
-				var diff = dateToday - dateTask;
-				// console.log(dateToday);
-				// console.log(dateTask);
-				// console.log(dateToday - dateTask);
-				// console.log(86400000 * 5);
-
-				if(dateToday > dateTask && counter > 200) {
-
-			    	// add this item
-			    	shownItems.push(item.id);
-
-			    } else if(dateToday > dateTask && diff < (86400000 * 5)) {
-				    //document.getElementById("p2").innerHTML += " greater"
-				    console.log(dateToday);
-				    console.log(dateTask + " due date");
-				    console.log(item.due.date + " due date");
-				    console.log(item.due.string + " due date");
-				    console.log(item.due.datetime + " due date");
-				    console.log(dateToday - dateTask);
-				    console.log(86400000 * 5);
-				    console.log("added ---- " + item.content);
-				    shownItems.push(item.id);
-				} else {
-				    //document.getElementById("p2").innerHTML += " smaller"
-				    console.log("skip because task for future");
-				    step--;
-				    continue;
-				    // do not include because in the future pa
-				}
-		    } else if(counter > 500) {
-		    	// add this item
-		    	shownItems.push(item.id);
-		    } else {
-		    	console.log("skip does not have due date");
-				step--;
-				continue;
-		    }
-
-		    if(item.assignee) {
-				if(item.assignee != userId) {
-					console.log("skip not assigned to user");
-				    step--;
-				    continue;
-				    // do not include because not assigned to me
-				}
-		    }
-
-		    //document.getElementById("p2").innerHTML += "<br><br> - " + linkify(item.content) + " " + "<a href='" + item.url +"' target='_blank'>Edit</a>";
-		    //document.getElementById("p2").innerHTML += " " + "<button onclick='closeTask(" + item.id +")'>Complete</button>";
-		    //document.getElementById("p2").innerHTML += " " + "<button onclick='rescheduleToday(" + item.id +")'>Reschedule Today</button>";
-		    shownItems.push(item.id);
-
-			var editLink = "<br> <a href='" + item.url +"' target='_blank'>Edit</a>";
-			var todayLink = "";
-			var tomLink = "";
-			var nextWeekLink = "";
-		    var recurringIndicator = "";
-
-		    if(item.due) {
-			    if(item.due.recurring) {
-			    	recurringIndicator += " | <b>recurring " + item.due.string + "</b>";
-			    }
-
-			    if(item.due.string) {
-			    	todayLink = " | <a class='pointer-link' onclick='reschedule("+item.id+",\""+item.due.string+"\")'>Today</a>";
-			    	tomLink = " | <a class='pointer-link' onclick='reschedule("+item.id+",\""+item.due.string+" starting tom \")'>Tom</a>";
-			    	nextWeekLink = " | <a class='pointer-link' onclick='reschedule("+item.id+",\""+item.due.string+" starting next week \")'>Next week</a>";
-				}
-			}
-
-			document.getElementById("additional-blocks").innerHTML += '<div class="bee-row bee-row-5" id="'+item.id+'"><div class="bee-row-content"><div class="bee-col bee-col-1 bee-col-w1"><div class="bee-block bee-block-1 bee-button"><a class="bee-button-content pointer-link changebg"  onclick="closeTask('+item.id+')" style="font-size: 14px; line-height: 28px; font-family: inherit; background-color: #3AAEE0; border-radius: 4px; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; color: #ffffff; padding-top: 5px; padding-right: 15px; padding-bottom: 5px; padding-left: 15px; width: auto; max-width: 100%; display: inline-block;"><span style="font-size: 16px; line-height: 200%; word-break: break-word;">✓</span></a></div></div><div class="bee-col bee-col-2 bee-col-w9"><div class="bee-block bee-block-1 bee-text"><div class="bee-text-content" style="font-size: 14px; line-height: 120%; color: #ffffff; font-family: inherit;"><p style="font-size: 14px; line-height: 16px;" id="'+item.id+'content">'+ linkify(item.content) + editLink +  todayLink  + tomLink + nextWeekLink + recurringIndicator +'</p></div></div></div></div>';
-		}
+		document.getElementById("p2").innerHTML += 
+		"<br>Completed: <b>"+ completedItemsCount +"</b>  |  " +
+		" total: <b>"+ data.length +"</b>  |  "+
+		" Shown: <b>"+ shownItems.length +"</b>";
 }
 
 function closeTask(taskId) {
 
-  	const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(window.location.search);
 	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
 	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId+'/close';
 
@@ -415,10 +420,13 @@ function closeTask(taskId) {
 		})
 	.then(res=>res)
   	.then(res => {
+  		completedItems.push(taskId);
   		//document.getElementById(taskId).innerHTML = "";
-  		var removeTarget = document.getElementById(taskId);
+  		document.getElementById(taskId+'content').innerHTML = document.getElementById(taskId+'content').innerHTML.slice(0, -1) + "√";
+  		var removeTarget = document.getElementById(taskId+"button");
   		removeTarget.style.opacity = '0';
-		setTimeout(function(){removeTarget.parentNode.removeChild(removeTarget);}, 100);
+			setTimeout(function(){removeTarget.parentNode.removeChild(removeTarget);}, 100);
+			getTotalCompletedItems();
   	});
 }
 
@@ -443,10 +451,9 @@ function rescheduleToday(taskId) {
   	});
 }
 
-
 function reschedule(taskId, dueString) {
 
-  	const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(window.location.search);
 	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
 	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId;
 	document.getElementById(taskId+'content').innerHTML += " ⭯";
@@ -470,8 +477,22 @@ function reschedule(taskId, dueString) {
   	});
 }
 
+// change url address to links
+function linkify(inputText) {
+    var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
-heheRun();
-  </script>
+    //URLs starting with http://, https://, or ftp://
+    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
 
+    //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+    return replacedText;
+}
+
+mainRun();
+
+</script>
 </html>
