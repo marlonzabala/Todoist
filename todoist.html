@@ -271,7 +271,7 @@ function mainRun() {
 
 	getTotalCompletedItems();
 
-  fetch('https://api.todoist.com/rest/v1/tasks', {
+  fetch('https://api.todoist.com/rest/v2/tasks', {
 	    headers: new Headers({
 	        'Authorization': myParam
 	    })
@@ -411,7 +411,7 @@ function closeTask(taskId) {
 
   const urlParams = new URLSearchParams(window.location.search);
 	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
-	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId+'/close';
+	const sssss = 'https://api.todoist.com/rest/v2/tasks/'+taskId+'/close';
 
 	document.getElementById(taskId+'content').innerHTML += " ⭯";
 
@@ -437,7 +437,7 @@ function rescheduleToday(taskId) {
 
   	const urlParams = new URLSearchParams(window.location.search);
 	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
-	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId;
+	const sssss = 'https://api.todoist.com/rest/v2/tasks/'+taskId;
 
 	fetch(sssss, {
 					method: 'POST',
@@ -458,7 +458,7 @@ function reschedule(taskId, dueString) {
 
   const urlParams = new URLSearchParams(window.location.search);
 	const myParam = 'Bearer '.concat(urlParams.get('apiKey'));
-	const sssss = 'https://api.todoist.com/rest/v1/tasks/'+taskId;
+	const sssss = 'https://api.todoist.com/rest/v2/tasks/'+taskId;
 	document.getElementById(taskId+'content').innerHTML += " ⭯";
 
 	fetch(sssss, {
