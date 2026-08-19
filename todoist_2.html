@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Todoist Focus</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width" name="viewport"/>
+<style>
+	:root {
+		--bg: #121214;
+		--card-bg: #1c1c1f;
+		--card-border: #2c2c30;
+		--text: #f2f2f3;
+		--muted: #9a9aa2;
+		--accent: #3AAEE0;
+		--accent-2: #f6a13a;
+		--success: #3ecf8e;
+		--danger: #ef5b5b;
+	}
+
+	* {
+		box-sizing: border-box
+	}
+
+	body {
+		background: var(--bg);
+		color: var(--text);
+		font-family: Ubuntu, Tahoma, Verdana, Segoe, sans-serif;
+		margin: 0;
+		padding: 28px 16px 60px;
+	}
+
+	a {
+		color: var(--accent-2)
+	}
+
+	.dashboard {
+		max-width: 880px;
+		margin: 0 auto;
+	}
+
+	.dash-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 20px;
+	}
+
+	.dash-header h1 {
+		font-size: 22px;
+		margin: 0;
+		font-weight: 600;
+		letter-spacing: .2px;
+	}
+
+	.refresh-btn {
+		background: var(--accent);
+		color: #fff;
+		border: none;
+		border-radius: 999px;
+		padding: 9px 18px;
+		font-size: 14px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background .2s ease, transform .15s ease;
+	}
+
+	.refresh-btn:hover {
+		background: #2f95c4;
+		transform: translateY(-1px);
+	}
+
+	.refresh-btn:active {
+		transform: translateY(0);
+	}
+
+	.overdue-banner {
+		display: none;
+		background: rgba(239, 91, 91, .12);
+		border: 1px solid rgba(239, 91, 91, .4);
+		color: #ffb3b3;
+		border-radius: 10px;
+		padding: 10px 16px;
+		font-size: 14px;
+		margin-bottom: 18px;
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 14px;
+		margin-bottom: 28px;
+	}
+
+	.stat-card {
+		background: var(--card-bg);
+		border: 1px solid var(--card-border);
+		border-radius: 14px;
+		padding: 16px 18px;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
+	}
+
+	.stat-label {
+		font-size: 11px;
+		text-transform: uppercase;
+		letter-spacing: .08em;
+		color: var(--muted);
+		font-weight: 600;
+		margin-bottom: 6px;
+	}
+
+	.stat-value {
+		font-size: 26px;
+		font-weight: 700;
+		line-height: 1.1;
+	}
+
+	.stat-sub {
+		font-size: 12px;
+		color: var(--muted);
+		margin-top: 6px;
+	}
+
+	.progress-track {
+		height: 6px;
+		background: #2a2a2e;
+		border-radius: 4px;
+		overflow: hidden;
+		margin: 10px 0 6px;
+	}
+
+	.progress-fill {
+		height: 100%;
+		width: 0%;
+		background: linear-gradient(90deg, var(--accent), var(--success));
+		transition: width .6s ease;
+		border-radius: 4px;
+	}
+
+	.focus-header {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		margin-bottom: 12px;
+	}
+
+	.focus-header h2 {
+		font-size: 16px;
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.focus-sub {
+		font-size: 12px;
+		color: var(--muted);
+	}
+
+	.task-list {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.task-card {
+		display: flex;
+		gap: 12px;
+		align-items: flex-start;
+		background: var(--card-bg);
+		border: 1px solid var(--card-border);
+		border-radius: 12px;
+		padding: 14px 16px;
+		transition: opacity .3s ease, transform .3s ease;
+	}
+
+	.task-check {
+		flex-shrink: 0;
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		border: 2px solid var(--accent);
+		background: transparent;
+		color: var(--accent);
+		font-size: 14px;
+		line-height: 1;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background .2s ease, color .2s ease;
+	}
+
+	.task-check:hover {
+		background: var(--accent);
+		color: #fff;
+	}
+
+	.task-body {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.task-title {
+		font-size: 14px;
+		line-height: 1.4;
+		word-break: break-word;
+	}
+
+	.task-meta {
+		margin-top: 6px;
+	}
+
+	.task-actions {
+		margin-top: 8px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.task-actions a.action-link {
+		font-size: 12px;
+		color: var(--muted);
+		text-decoration: none;
+		padding: 4px 10px;
+		border: 1px solid var(--card-border);
+		border-radius: 999px;
+		cursor: pointer;
+		transition: color .2s ease, border-color .2s ease;
+	}
+
+	.task-actions a.action-link:hover {
+		color: var(--text);
+		border-color: var(--accent);
+	}
+
+	.badge {
+		display: inline-block;
+		font-size: 11px;
+		font-weight: 600;
+		padding: 3px 9px;
+		border-radius: 999px;
+		margin-right: 6px;
+	}
+
+	.badge-overdue {
+		background: rgba(239, 91, 91, .15);
+		color: #ff8b8b;
+	}
+
+	.badge-today {
+		background: rgba(246, 161, 58, .15);
+		color: var(--accent-2);
+	}
+
+	.badge-future {
+		background: rgba(154, 154, 162, .15);
+		color: var(--muted);
+	}
+
+	.badge-recurring {
+		background: rgba(58, 174, 224, .15);
+		color: var(--accent);
+	}
+
+	@media (max-width: 620px) {
+		.stats-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.dash-header h1 {
+			font-size: 18px;
+		}
+	}
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+
+	<div class="dash-header">
+		<h1>Todoist Focus</h1>
+		<button class="refresh-btn" onclick="mainRun()">&#8635; Refresh</button>
+	</div>
+
+	<div class="overdue-banner" id="overdue-banner"></div>
+
+	<div class="stats-grid">
+		<div class="stat-card">
+			<div class="stat-label">Today</div>
+			<div class="stat-value" id="today-value">&ndash;</div>
+			<div class="progress-track"><div class="progress-fill" id="today-progress"></div></div>
+			<div class="stat-sub" id="today-message">Loading&hellip;</div>
+		</div>
+		<div class="stat-card">
+			<div class="stat-label">This Week</div>
+			<div class="stat-value" id="week-value">&ndash;</div>
+			<div class="stat-sub">tasks completed</div>
+		</div>
+		<div class="stat-card">
+			<div class="stat-label">All Time</div>
+			<div class="stat-value" id="alltime-value">&ndash;</div>
+			<div class="stat-sub">tasks completed</div>
+		</div>
+		<div class="stat-card">
+			<div class="stat-label">Karma</div>
+			<div class="stat-value" id="karma-value">&ndash;</div>
+			<div class="stat-sub" id="karma-trend">&mdash;</div>
+		</div>
+	</div>
+
+	<div class="focus-section">
+		<div class="focus-header">
+			<h2>Focus on these</h2>
+			<span class="focus-sub" id="focus-sub">Loading&hellip;</span>
+		</div>
+		<div id="additional-blocks" class="task-list"></div>
+	</div>
+
+</div>
+
+</body>
+
+
+<script>
+
+var API_BASE = 'https://api.todoist.com/api/v1';
+
+var shownItems = [];
+var completedItems = [];
+var dataResponse = null;
+var myParam = "";
+
+function todayStr() {
+	var d = new Date();
+	var m = String(d.getMonth() + 1).padStart(2, '0');
+	var day = String(d.getDate()).padStart(2, '0');
+	return d.getFullYear() + '-' + m + '-' + day;
+}
+
+function daysBetween(dateStr, refStr) {
+	var d1 = new Date(dateStr + 'T00:00:00');
+	var d2 = new Date(refStr + 'T00:00:00');
+	return Math.round((d2 - d1) / 86400000);
+}
+
+function motivationalMessage(pct) {
+	if (pct === null) return "Nothing due today \u2014 enjoy the calm";
+	if (pct >= 100) return "All done for today!";
+	if (pct >= 75) return "Almost there \u2014 finish strong";
+	if (pct >= 50) return "More than halfway there";
+	if (pct >= 25) return "Good progress, keep going";
+	if (pct > 0) return "Nice start \u2014 keep the momentum";
+	return "Let's get started";
+}
+
+function mainRun() {
+
+	var urlParams = new URLSearchParams(window.location.search);
+	myParam = 'Bearer '.concat(urlParams.get('apiKey'));
+
+	document.getElementById('focus-sub').textContent = 'Loading\u2026';
+
+	if (dataResponse != null) {
+		get5fromList(dataResponse);
+		fetchStats().then(function(stats) {
+			renderDashboard(dataResponse, stats);
+		}).catch(function(err) { console.error(err); });
+		return;
+	}
+
+	Promise.all([fetchAllTasks(), fetchStats()])
+		.then(function(results) {
+			var tasks = results[0];
+			var stats = results[1];
+			dataResponse = tasks;
+			get5fromList(tasks);
+			renderDashboard(tasks, stats);
+		})
+		.catch(function(err) {
+			console.error(err);
+			document.getElementById('focus-sub').textContent = 'Error loading data \u2014 check console.';
+		});
+}
+
+// GET /tasks is paginated: {results: [...], next_cursor}.
+// Follow next_cursor until it's null to collect every open task.
+function fetchAllTasks() {
+	var allTasks = [];
+	var cursor = null;
+
+	function fetchPage() {
+		var url = API_BASE + '/tasks?limit=200';
+		if (cursor) {
+			url += '&cursor=' + encodeURIComponent(cursor);
+		}
+		return fetch(url, {
+			headers: new Headers({
+				'Authorization': myParam
+			})
+		})
+		.then(function(response) { return response.json(); })
+		.then(function(data) {
+			allTasks = allTasks.concat(data.results || []);
+			cursor = data.next_cursor;
+			if (cursor) {
+				return fetchPage();
+			}
+			return allTasks;
+		});
+	}
+
+	return fetchPage();
+}
+
+// Pulls completion stats + karma via the Sync endpoint (sync_token=*,
+// resource_types=["stats","user"]) -- the same data Todoist's own apps
+// use to power their productivity/karma views.
+function fetchStats() {
+	var body = new URLSearchParams();
+	body.append('sync_token', '*');
+	body.append('resource_types', JSON.stringify(["stats", "user"]));
+
+	return fetch(API_BASE + '/sync', {
+		method: 'POST',
+		headers: new Headers({
+			'Authorization': myParam
+		}),
+		body: body
+	})
+	.then(function(response) { return response.json(); })
+	.then(function(data) {
+		var stats = data.stats || {};
+		var user = data.user || {};
+		var todayItem = (stats.days_items && stats.days_items[0]) || { total_completed: 0 };
+		var weekItem = (stats.week_items && stats.week_items[0]) || { total_completed: 0 };
+		return {
+			completedToday: todayItem.total_completed || 0,
+			completedWeek: weekItem.total_completed || 0,
+			completedAllTime: stats.completed_count || 0,
+			karma: user.karma,
+			karmaTrend: user.karma_trend
+		};
+	})
+	.catch(function(err) {
+		console.error(err);
+		return { completedToday: 0, completedWeek: 0, completedAllTime: 0, karma: null, karmaTrend: null };
+	});
+}
+
+function renderDashboard(tasks, stats) {
+	var today = todayStr();
+	var overdueCount = 0;
+	var dueTodayCount = 0;
+
+	(tasks || []).forEach(function(t) {
+		if (t.due && t.due.date) {
+			if (t.due.date < today) overdueCount++;
+			else if (t.due.date === today) dueTodayCount++;
+		}
+	});
+
+	var totalToday = stats.completedToday + dueTodayCount;
+	var pct = totalToday === 0 ? null : Math.round((stats.completedToday / totalToday) * 100);
+
+	document.getElementById('today-value').textContent = stats.completedToday + ' / ' + totalToday;
+	document.getElementById('today-progress').style.width = (pct === null ? 0 : pct) + '%';
+	document.getElementById('today-message').textContent = motivationalMessage(pct);
+
+	document.getElementById('week-value').textContent = stats.completedWeek;
+	document.getElementById('alltime-value').textContent = stats.completedAllTime;
+
+	document.getElementById('karma-value').textContent = (stats.karma != null) ? Math.round(stats.karma) : '\u2013';
+	var trendEl = document.getElementById('karma-trend');
+	if (stats.karmaTrend === 'up') {
+		trendEl.textContent = '\u25B2 trending up';
+		trendEl.style.color = 'var(--success)';
+	} else if (stats.karmaTrend === 'down') {
+		trendEl.textContent = '\u25BC trending down';
+		trendEl.style.color = 'var(--danger)';
+	} else {
+		trendEl.textContent = '\u2014 steady';
+		trendEl.style.color = 'var(--muted)';
+	}
+
+	var banner = document.getElementById('overdue-banner');
+	if (overdueCount > 0) {
+		banner.style.display = 'block';
+		banner.textContent = '\u26A0 ' + overdueCount + (overdueCount === 1 ? ' task is' : ' tasks are') + ' overdue \u2014 clear them below to reset the count.';
+	} else {
+		banner.style.display = 'none';
+	}
+}
+
+function get5fromList(dataResponse) {
+	var data = dataResponse;
+	var today = todayStr();
+	var counter = 0;
+
+	for (var step = 0; step < 5; step++) {
+
+		counter++;
+
+		var item = data[Math.floor(Math.random() * data.length)];
+
+		var idx = shownItems.indexOf(item.id);
+		if (idx != -1) {
+			step--;
+			continue;
+		}
+
+		if (item.due) {
+			var dateTask = new Date(item.due.date);
+			var dateToday = new Date();
+			var diff = dateToday - dateTask;
+
+			if (dateToday > dateTask && diff < (86400000 * 5)) {
+				shownItems.push(item.id);
+			} else if (dateToday > dateTask && counter > 200) {
+				shownItems.push(item.id);
+			} else {
+				step--;
+				continue;
+			}
+		} else if (counter > 500) {
+			shownItems.push(item.id);
+		} else {
+			step--;
+			continue;
+		}
+
+		var urlParams = new URLSearchParams(window.location.search);
+		var userId = urlParams.get('userId');
+		if (item.assignee_id) {
+			if (item.assignee_id != userId) {
+				step--;
+				continue;
+			}
+		}
+
+		var recurringBadge = '';
+		if (item.due && item.due.is_recurring) {
+			recurringBadge = ' <span class="badge badge-recurring">&#8635; recurring</span>';
+		}
+
+		var dueBadge = '';
+		if (item.due && item.due.date) {
+			var diffDays = daysBetween(item.due.date, today);
+			if (diffDays > 0) {
+				dueBadge = '<span class="badge badge-overdue">' + diffDays + (diffDays === 1 ? ' day' : ' days') + ' overdue</span>';
+			} else if (diffDays === 0) {
+				dueBadge = '<span class="badge badge-today">Due today</span>';
+			} else {
+				dueBadge = '<span class="badge badge-future">Due ' + item.due.date + '</span>';
+			}
+		}
+
+		var todayLink = '', tomLink = '', nextWeekLink = '';
+		if (item.due && item.due.string) {
+			// escape quote characters as HTML entities -- safe inside
+			// an inline onclick attribute regardless of quoting style
+			var dueStr = String(item.due.string).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+			todayLink = "<a class='action-link' onclick='reschedule(\"" + item.id + "\", \"" + dueStr + "\")'>Today</a>";
+			tomLink = "<a class='action-link' onclick='reschedule(\"" + item.id + "\", \"" + dueStr + " starting tom \")'>Tomorrow</a>";
+			nextWeekLink = "<a class='action-link' onclick='reschedule(\"" + item.id + "\", \"" + dueStr + " starting next week \")'>Next week</a>";
+		}
+
+		var editLink = "<a class='action-link' href='https://app.todoist.com/app/task/" + item.id + "' target='_blank'>Edit</a>";
+
+		document.getElementById("additional-blocks").innerHTML +=
+			'<div class="task-card" id="' + item.id + '">' +
+				'<button class="task-check" id="' + item.id + 'button" onclick="closeTask(\'' + item.id + '\')" title="Mark complete">&#10003;</button>' +
+				'<div class="task-body">' +
+					'<div class="task-title" id="' + item.id + 'content">' + linkify(item.content) + recurringBadge + '</div>' +
+					'<div class="task-meta">' + dueBadge + '</div>' +
+					'<div class="task-actions">' + editLink + todayLink + tomLink + nextWeekLink + '</div>' +
+				'</div>' +
+			'</div>';
+	}
+
+	document.getElementById('focus-sub').textContent = shownItems.length + ' shown \u00B7 ' + data.length + ' open tasks';
+}
+
+function closeTask(taskId) {
+
+	var urlParams = new URLSearchParams(window.location.search);
+	var localParam = 'Bearer '.concat(urlParams.get('apiKey'));
+	var closeUrl = API_BASE + '/tasks/' + taskId + '/close';
+
+	var card = document.getElementById(taskId);
+	var checkBtn = document.getElementById(taskId + 'button');
+	if (checkBtn) {
+		checkBtn.style.opacity = '0.4';
+		checkBtn.disabled = true;
+	}
+
+	fetch(closeUrl, {
+		method: 'POST',
+		headers: new Headers({
+			'Authorization': localParam
+		})
+	})
+	.then(function(res) { return res; })
+	.then(function() {
+		completedItems.push(taskId);
+		if (card) {
+			card.style.opacity = '0';
+			card.style.transform = 'translateX(16px)';
+			setTimeout(function() {
+				if (card.parentNode) card.parentNode.removeChild(card);
+			}, 300);
+		}
+		dataResponse = (dataResponse || []).filter(function(t) { return t.id !== taskId; });
+		fetchStats().then(function(stats) { renderDashboard(dataResponse, stats); });
+	})
+	.catch(function(err) { console.error(err); });
+}
+
+function reschedule(taskId, dueString) {
+
+	var urlParams = new URLSearchParams(window.location.search);
+	var localParam = 'Bearer '.concat(urlParams.get('apiKey'));
+	var updateUrl = API_BASE + '/tasks/' + taskId;
+
+	var card = document.getElementById(taskId);
+	if (card) {
+		card.style.opacity = '0.4';
+	}
+
+	fetch(updateUrl, {
+		method: 'POST',
+		headers: new Headers({
+			'Authorization': localParam,
+			'Content-Type': "application/json"
+		}),
+		body: JSON.stringify({ due_string: dueString })
+	})
+	.then(function(res) { return res; })
+	.then(function() {
+		if (card) {
+			card.style.opacity = '0';
+			setTimeout(function() {
+				if (card.parentNode) card.parentNode.removeChild(card);
+			}, 300);
+		}
+		dataResponse = (dataResponse || []).filter(function(t) { return t.id !== taskId; });
+		fetchStats().then(function(stats) { renderDashboard(dataResponse, stats); });
+	})
+	.catch(function(err) { console.error(err); });
+}
+
+// change url address to links
+function linkify(inputText) {
+    var replacedText, replacePattern1, replacePattern2;
+
+    //URLs starting with http://, https://, or ftp://
+    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+
+    //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+    return replacedText;
+}
+
+mainRun();
+
+</script>
+</html>
